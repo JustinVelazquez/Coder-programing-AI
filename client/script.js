@@ -1,13 +1,18 @@
 import bot from './assets/bot.svg';
 import user from './assets/user.svg';
 
+
+//
 const form = document.querySelector('form');
 const chatContainer = document.querySelector('#chat_container');
 
+//loadInterval variable
 let loadInterval;
 
+//loader function that loads our chatbot's messages as we wait for the server to fetch the answer
 function loader(element) {
   element.textContent = '';
+  // every 300 milliseconds we add a '.' and if it reaches 4 dots we reset
   loadInterval = setInterval(() => {
     element.textContent += '.';
 
@@ -17,9 +22,11 @@ function loader(element) {
   }, 300);
 }
 
+// implements a 'typing' functionality to our chat's to improve user experience
 function typeText(element, text) {
   let index = 0;
 
+  // every 20 milliseconds we add a new char to our chat's response and increase til we reach the end of our string
   let interval = setInterval(() => {
     if (index < text.length) {
       element.innerHTML += text.charAt(index);
@@ -30,6 +37,7 @@ function typeText(element, text) {
   }, 20);
 }
 
+// generates a uniqueId for every message in order to map over them
 function generateUniqueId() {
   const timeStamp = Date.now();
   const randomNum = Math.random();
@@ -37,6 +45,8 @@ function generateUniqueId() {
 
   return `id-${timeStamp}-${hexString}`;
 }
+
+//Changes what our 'chat-stripe' looks at depending on who is 'talking', the user or the bot
 function chatStripe(isAi, value, uniqueId) {
   return ( 
   `
@@ -55,12 +65,14 @@ function chatStripe(isAi, value, uniqueId) {
   )
 }
 
+// handles our form submission to our server
 const handleSubmit = async (e) => {
+  // prevents the page from refreshing
   e.preventDefault();
 
   const data = new FormData(form);
 
-  // user chatStripe
+  // setting our prompt's chat container HTML to our chatStripe function and giving it an initial value of false
   chatContainer.innerHTML += chatStripe(false, data.get('prompt'));
 
   form.reset();
@@ -101,7 +113,10 @@ const handleSubmit = async (e) => {
   }
 };
 
+// form submission event handler 
 form.addEventListener('submit', handleSubmit);
+
+//allows for form submission with the 'enter' key
 form.addEventListener('keyup', (e) => {
   if (e.keyCode === 13) {
     handleSubmit(e);
