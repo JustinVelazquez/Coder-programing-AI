@@ -100,6 +100,7 @@ const handleSubmit = async (e) => {
 
   clearInterval(loadInterval), (messageDiv.innerHTML = ' ');
 
+  // cleans up the data from received from the server
   if (response.ok) {
     const data = await response.json();
     const parsedData = data.bot.trim();
